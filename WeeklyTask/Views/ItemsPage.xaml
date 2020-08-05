@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="WeeklyTask.Views.ItemsPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:Selector="clr-namespace:WeeklyTask.Views.SelectorTasks"
+    xmlns:behaviors="clr-namespace:WeeklyTask.Behaviors"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pancake="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+    x:Name="BrowseItemsPage"
+    Title="{Binding Title}"
+    BackgroundColor="Black"
+    mc:Ignorable="d">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Clicked="ChangeDataTemplate_Clicked" Text="Vista" />
+        <ToolbarItem Clicked="btn_AllorMain_Clicked" Text="Filtro" />
+        <ToolbarItem Clicked="AddItem_Clicked" Text="Nuevo" />
+    </ContentPage.ToolbarItems>
+
+    <!--<RefreshView Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}"/>-->
+
+
+
+    <ContentPage.Resources>
+        <x:Int16 x:Key="WidthColumn">250</x:Int16>
+
+        <Style TargetType="CollectionView">
+            <Setter Property="WidthRequest" Value="250" />
+            <Setter Property="Margin" Value="5,0" />
+            <Setter Property="ItemsSource" Value="{Binding Items, Mode=TwoWay}" />
+        </Style>
+
+        <Style x:Key="DayPancake" TargetType="pancake:PancakeView">
+            <Setter Property="Margin" Value="5,0" />
+            <Setter Property="WidthRequest" Value="250" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="BackgroundColor" Value="MediumPurple" />
+        </Style>
+
+        <Style x:Key="lblDay" TargetType="Label">
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="FontSize" Value="22" />
+            <Setter Property="HorizontalOptions" Value="Center" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+
+        <!--#region DataTemplate Region-->
+
+
+
+
+
+        <DataTemplate x:Key="HideItemTemplate">
+            <StackLayout HeightRequest="0" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="NormalItemTemplater">
+            <StackLayout Margin="0" Padding="10">
+                <StackLayout.GestureRecognizers>
+                    <!--<TapGestureRecognizer NumberOfTapsRequired="1" Tapped="OnItemSelected" />-->
+                </StackLayout.GestureRecognizers>
+                <pancake:PancakeView
+                    Margin="0"
+                    Padding="5"
+                    BackgroundColor="White"
+                    CornerRadius="10"
+                    HasShadow="True">
+                    <pancake:PancakeView.Border>
+                        <pancake:Border Thickness="3" Color="Gray" />
+                    </pancake:PancakeView.Border>
+                    <StackLayout>
+                        <Label
+                            FontAttributes="Bold"
+                            FontSize="18"
+                            Text="{Binding Text}"
+                            TextColor="Black" />
+
+                        <Label Text="{Binding Day}">
+                            <Label.Triggers>
+                                <DataTrigger
+                                    Binding="{Binding Day, TargetNullValue='', Mode=TwoWay}"
+                                    TargetType="Label"
+                                    Value="">
+                                    <Setter Property="HeightRequest" Value="0" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                        </Label>
+
+                        <Expander>
+                            <Expander.Triggers>
+                                <DataTrigger
+                                    Binding="{Binding Description, TargetNullValue=''}"
+                                    TargetType="Expander"
+                                    Value="">
+                                    <Setter Property="HeightRequest" Value="0" />
+                                </DataTrigger>
+                            </Expander.Triggers>
+                            <Expander.Header>
+                                <Label FontSize="Medium" Text=" » Detalles" />
+                            </Expander.Header>
+                            <Label Text="{Binding Description, StringFormat='{0}{0}{0}{0}'}" />
+
+                        </Expander>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="30" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <CheckBox
+                                IsChecked="{Binding IsDone, Mode=TwoWay}"
+                                IsEnabled="False"
+                                Scale="1.1"
+                                WidthRequest="30"
+                                Color="Green" />
+                            <BoxView
+                                HeightRequest="30"
+                                WidthRequest="30"
+                                Color="Transparent">
+                                <BoxView.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding IsDoneCommand}" NumberOfTapsRequired="1" />
+                                </BoxView.GestureRecognizers>
+                            </BoxView>
+                            <Label
+                                Grid.Column="1"
+                                Text="Done"
+                                VerticalOptions="Center">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding IsDoneCommand}" NumberOfTapsRequired="1" />
+                                </Label.GestureRecognizers>
+                            </Label>
+
+
+                            <CheckBox
+                                Grid.Row="1"
+                                BindingContext="{Binding .}"
+                                ClassId="ItemsPage"
+                                IsChecked="{Binding IsMain, Mode=TwoWay}"
+                                IsEnabled="False"
+                                Scale="1.1"
+                                WidthRequest="30"
+                                Color="Blue" />
+                            <BoxView
+                                Grid.Row="1"
+                                HeightRequest="30"
+                                WidthRequest="30"
+                                Color="Transparent">
+                                <BoxView.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding IsMainCommand}" NumberOfTapsRequired="1" />
+                                </BoxView.GestureRecognizers>
+                            </BoxView>
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Text="Main"
+                                VerticalOptions="Center">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding IsMainCommand}" NumberOfTapsRequired="1" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </Grid>
+
+                    </StackLayout>
+
+                </pancake:PancakeView>
+
+            </StackLayout>
+        </DataTemplate>
+
+        <DataTemplate x:Key="itemDetailsTemplate">
+            <Label Margin="20" Text="{Binding Text}" />
+        </DataTemplate>
+
+
+
+
+
+        <!--#endregion-->
+
+        <!--  SELECTORS  -->
+        <Selector:TaskDataTemplateSelector
+            x:Key="TaskDataTemplateSelector_NoDay"
+            Day=""
+            DetailsTemplate="{StaticResource itemDetailsTemplate}"
+            HideTemplate="{StaticResource HideItemTemplate}"
+            NormalTemplate="{StaticResource NormalItemTemplater}" />
+
+        <Selector:TaskDataTemplateSelector
+            x:Key="TaskDataTemplateSelector_Domingo"
+            Day="Domingo"
+            DetailsTemplate="{StaticResource itemDetailsTemplate}"
+            HideTemplate="{StaticResource HideItemTemplate}"
+            NormalTemplate="{StaticResource NormalItemTemplater}" />
+
+        <Selector:TaskDataTemplateSelector
+            x:Key="TaskDataTemplateSelector_Lunes"
+            Day="Lunes"
+            DetailsTemplate="{StaticResource itemDetailsTemplate}"
+            HideTemplate="{StaticResource HideItemTemplate}"
+            NormalTemplate="{StaticResource NormalItemTemplater}" />
+
+        <Selector:TaskDataTemplateSelector
+            x:Key="TaskDataTemplateSelector_Martes"
+            Day="Martes"
+            DetailsTemplate="{StaticResource itemDetailsTemplate}"
+            HideTemplate="{StaticResource HideItemTemplate}"
+            NormalTemplate="{StaticResource NormalItemTemplater}" />
+
+
+        <Selector:TaskDataTemplateSelector
+            x:Key="TaskDataTemplateSelector_Miercoles"
+            Day="Miércoles"
+            DetailsTemplate="{StaticResource itemDetailsTemplate}"
+            HideTemplate="{StaticResource HideItemTemplate}"
+            NormalTemplate="{StaticResource NormalItemTemplater}" />
+
+
+
+        <Selector:TaskDataTemplateSelector
+            x:Key="TaskDataTemplateSelector_Jueves"
+            Day="Jueves"
+            DetailsTemplate="{StaticResource itemDetailsTemplate}"
+            HideTemplate="{StaticResource HideItemTemplate}"
+            NormalTemplate="{StaticResource NormalItemTemplater}" />
+
+
+        <Selector:TaskDataTemplateSelector
+            x:Key="TaskDataTemplateSelector_Viernes"
+            Day="Viernes"
+            DetailsTemplate="{StaticResource itemDetailsTemplate}"
+            HideTemplate="{StaticResource HideItemTemplate}"
+            NormalTemplate="{StaticResource NormalItemTemplater}" />
+
+
+        <Selector:TaskDataTemplateSelector
+            x:Key="TaskDataTemplateSelector_Sabado"
+            Day="Sábado"
+            DetailsTemplate="{StaticResource itemDetailsTemplate}"
+            HideTemplate="{StaticResource HideItemTemplate}"
+            NormalTemplate="{StaticResource NormalItemTemplater}" />
+
+    </ContentPage.Resources>
+
+
+
+    <ScrollView
+        HorizontalOptions="Fill"
+        Orientation="Horizontal"
+        VerticalOptions="Fill">
+        <StackLayout Orientation="Horizontal" Spacing="0">
+            <Grid RowDefinitions="40,*" RowSpacing="0">
+                <StackLayout
+                    Grid.Column="0"
+                    Margin="0"
+                    Orientation="Horizontal"
+                    Rotation="0"
+                    Spacing="0">
+                    <pancake:PancakeView Style="{StaticResource DayPancake}">
+                        <Label Style="{StaticResource lblDay}" Text="Sin día" />
+                    </pancake:PancakeView>
+                    <pancake:PancakeView BackgroundColor="LightSkyBlue" Style="{StaticResource DayPancake}">
+                        <Label Style="{StaticResource lblDay}" Text="Domingo" />
+                    </pancake:PancakeView>
+                    <pancake:PancakeView Style="{StaticResource DayPancake}">
+                        <Label Style="{StaticResource lblDay}" Text="Lunes" />
+                    </pancake:PancakeView>
+                    <pancake:PancakeView BackgroundColor="LightSkyBlue" Style="{StaticResource DayPancake}">
+                        <Label Style="{StaticResource lblDay}" Text="Martes" />
+                    </pancake:PancakeView>
+                    <pancake:PancakeView Style="{StaticResource DayPancake}">
+                        <Label Style="{StaticResource lblDay}" Text="Miércoles" />
+                    </pancake:PancakeView>
+                    <pancake:PancakeView BackgroundColor="LightSkyBlue" Style="{StaticResource DayPancake}">
+                        <Label Style="{StaticResource lblDay}" Text="Jueves" />
+                    </pancake:PancakeView>
+                    <pancake:PancakeView Style="{StaticResource DayPancake}">
+                        <Label Style="{StaticResource lblDay}" Text="Viernes" />
+                    </pancake:PancakeView>
+                    <pancake:PancakeView BackgroundColor="LightSkyBlue" Style="{StaticResource DayPancake}">
+                        <Label Style="{StaticResource lblDay}" Text="Sábado" />
+                    </pancake:PancakeView>
+                </StackLayout>
+
+                <StackLayout
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="0"
+                    Orientation="Horizontal"
+                    Spacing="0">
+                    <CollectionView ItemTemplate="{StaticResource TaskDataTemplateSelector_NoDay}" />
+                    <CollectionView ItemTemplate="{StaticResource TaskDataTemplateSelector_Domingo}" />
+                    <CollectionView ItemTemplate="{StaticResource TaskDataTemplateSelector_Lunes}" />
+                    <CollectionView ItemTemplate="{StaticResource TaskDataTemplateSelector_Martes}" />
+                    <CollectionView ItemTemplate="{StaticResource TaskDataTemplateSelector_Miercoles}" />
+                    <CollectionView ItemTemplate="{StaticResource TaskDataTemplateSelector_Jueves}" />
+                    <CollectionView ItemTemplate="{StaticResource TaskDataTemplateSelector_Viernes}" />
+                    <CollectionView ItemTemplate="{StaticResource TaskDataTemplateSelector_Sabado}" />
+
+                </StackLayout>
+            </Grid>
+
+        </StackLayout>
+    </ScrollView>
+
+</ContentPage>

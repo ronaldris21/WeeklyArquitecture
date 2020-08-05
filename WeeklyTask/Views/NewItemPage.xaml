@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<ContentPage
+    x:Class="WeeklyTask.Views.NewItemPage"
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:system="clr-namespace:System;assembly=netstandard"
+    xmlns:xfmaterial="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
+    Title="Nueva Tarea"
+    BackgroundColor="Black"
+    mc:Ignorable="d">
+
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Clicked="Cancel_Clicked" Text="Cancelar" />
+        <ToolbarItem Clicked="Save_Clicked" Text="Guardar" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <Frame
+            Margin="15"
+            BackgroundColor="LightSteelBlue"
+            BorderColor="Black"
+            CornerRadius="20"
+            HorizontalOptions="Center"
+            VerticalOptions="Center">
+            <StackLayout>
+                <Label FontSize="Medium" Text="Tarea" />
+                <Entry
+                    d:Text="Item name"
+                    ReturnType="Next"
+                    TabIndex="1"
+                    Text="{Binding Item.Text}"
+                    Visual="Material" />
+
+                <Label Text="Fecha" />
+                <StackLayout HorizontalOptions="FillAndExpand" Orientation="Horizontal">
+                    <DatePicker
+                        Date="{Binding Item.ReminderDate, Mode=TwoWay}"
+                        HorizontalOptions="FillAndExpand"
+                        MinimumDate="{x:Static system:DateTime.Today}" />
+
+                    <TimePicker HorizontalOptions="FillAndExpand" Time="{Binding Item.ReminderTime}" />
+                </StackLayout>
+
+                <Label FontSize="Medium" Text="Detalles" />
+                <Editor
+                    Margin="0"
+                    FontSize="Body"
+                    HeightRequest="70"
+                    TabIndex="2"
+                    Text="{Binding Item.Description}" />
+
+                <!--  UNUSED, but valid, Way to pick the Day  -->
+                <!--<Picker Title="Día" SelectedItem="{Binding Item.Day}">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Domingo</x:String>
+                        <x:String>Lunes</x:String>
+                        <x:String>Martes</x:String>
+                        <x:String>Miércoles</x:String>
+                        <x:String>Jueves</x:String>
+                        <x:String>Viernes</x:String>
+                        <x:String>Sábado</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>-->
+
+                <Grid ColumnDefinitions="40,*">
+
+                    <!--  PRIORITY  -->
+                    <CheckBox Grid.Column="0" IsChecked="{Binding Item.IsMain}" />
+                    <Label
+                        Grid.Column="1"
+                        Text="Prioridad"
+                        VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="IsMain_TapGestureRecognizer_Tapped" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <!--  REMINDER  -->
+                    <CheckBox Grid.Row="1" IsChecked="{Binding Item.HasReminder}" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Text="Recordatorme"
+                        VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="HasReminder_TapGestureRecognizer_Tapped" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                </Grid>
+                <Button
+                    BackgroundColor="Black"
+                    Clicked="Save_Clicked"
+                    CornerRadius="20"
+                    HorizontalOptions="End"
+                    Text="Guardar"
+                    TextColor="White" />
+
+
+
+                <!--#region UnUsed RadioButtons Group for picking the day-->
+                <!--
+            <ScrollView>
+
+                <Frame>
+                    <StackLayout>
+                        <Label
+                            FontSize="Medium"
+                            Text="Selecciona un día"
+                            Visual="Material" />
+                        <RadioButton
+                            CheckedChanged="RadioButton_CheckedChanged"
+                            GroupName="Day"
+                            Text="Sin Día" />
+                -->
+                <!--  CAMBIAR EN EL EVENTO TAMBIÉN PARA QUE COINCIDA CON EL Text de XAML  -->
+                <!--
+                        <RadioButton
+                            CheckedChanged="RadioButton_CheckedChanged"
+                            GroupName="Day"
+                            Text="Domingo" />
+                        <RadioButton
+                            CheckedChanged="RadioButton_CheckedChanged"
+                            GroupName="Day"
+                            Text="Lunes" />
+                        <RadioButton
+                            CheckedChanged="RadioButton_CheckedChanged"
+                            GroupName="Day"
+                            Text="Martes" />
+                        <RadioButton
+                            CheckedChanged="RadioButton_CheckedChanged"
+                            GroupName="Day"
+                            Text="Miércoles" />
+                        <RadioButton
+                            CheckedChanged="RadioButton_CheckedChanged"
+                            GroupName="Day"
+                            Text="Jueves" />
+                        <RadioButton
+                            CheckedChanged="RadioButton_CheckedChanged"
+                            GroupName="Day"
+                            Text="Viernes" />
+                        <RadioButton
+                            CheckedChanged="RadioButton_CheckedChanged"
+                            GroupName="Day"
+                            Text="Sábado" />
+                    </StackLayout>
+                </Frame>
+            </ScrollView>
+                -->
+                <!--#endregion-->
+
+
+            </StackLayout>
+        </Frame>
+    </ContentPage.Content>
+
+</ContentPage>
