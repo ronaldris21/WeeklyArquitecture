@@ -35,10 +35,9 @@ jobs:
       
     - name: Android
       run: |
-        cd Blank
         nuget restore
-        cd Blank.Android
-        msbuild Blank.Android.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
+        cd WeeklyTask.Android
+        msbuild WeeklyTask.Android.csproj /verbosity:normal /t:Rebuild /p:Configuration=Debug
   iOS:
 
     runs-on: macos-latest
@@ -49,6 +48,5 @@ jobs:
       
     - name: iOS
       run: |
-        cd Blank
         nuget restore
-        msbuild Blank.iOS/Blank.iOS.csproj /verbosity:normal /t:Rebuild /p:Platform=iPhoneSimulator /p:Configuration=Debug
+        msbuild WeeklyTask.iOS/WeeklyTask.iOS.csproj /verbosity:normal /t:Rebuild /p:Platform=iPhoneSimulator /p:Configuration=Debug
